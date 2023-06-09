@@ -1,30 +1,34 @@
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
+using System;
+using System.IO;
 
-class Main {
-  public static void main(String[] args) {
-    try {
+class MainClass
+{
+    public static void Main(string[] args)
+    {
+        try
+        {
+            // Creates a FileStream
+            FileStream file = new FileStream("input.txt", FileMode.Open);
 
-      // Creates a FileInputStream
-      FileInputStream file = new FileInputStream("input.txt");
+            // Creates a BufferedStream
+            BufferedStream input = new BufferedStream(file);
 
-      // Creates a BufferedInputStream
-      BufferedInputStream input = new BufferedInputStream(file);
+            // Reads first byte from file
+            int i = input.ReadByte();
 
-      // Reads first byte from file
-      int i = input .read();
+            while (i != -1)
+            {
+                Console.Write((char)i);
 
-      while (i != -1) {
-        System.out.print((char) i);
+                // Reads next byte from the file
+                i = input.ReadByte();
+            }
 
-        // Reads next byte from the file
-        i = input.read();
-      }
-      input.close();
+            input.Close();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.StackTrace);
+        }
     }
-
-    catch (Exception e) {
-      e.getStackTrace();
-    }
-  }
 }
