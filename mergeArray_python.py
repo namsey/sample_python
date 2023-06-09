@@ -1,76 +1,236 @@
-import java.util.ArrayList;
-import java.util.List;
+package edu.princeton.cs.algs4;
 
-public class SampleCode {
-  
-  public static void main(String[] args) {
-    // Code Coverage
-    printMessage("Hello, Codacy!");
+/**
+ *  The {@code Complex} class represents a complex number.
+ *  Complex numbers are immutable: their values cannot be changed after they
+ *  are created.
+ *  It includes methods for addition, subtraction, multiplication, division,
+ *  conjugation, and other common functions on complex numbers.
+ *  <p>
+ *  This computes correct results if all arithmetic performed is
+ *  without floating-point rounding error or arithmetic overflow.
+ *  In practice, there will be floating-point rounding error.
+ *  <p>
+ *  For additional documentation, see <a href="https://algs4.cs.princeton.edu/99scientific">Section 9.9</a> of
+ *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
+ *
+ *  @author Robert Sedgewick
+ *  @author Kevin Wayne
+ */
+public class Complex {
+    private final double re;   // the real part
+    private final double im;   // the imaginary part
 
-    // Complexity
-    int number = 10;
-    System.out.println("Factorial of " + number + " is: " + factorial(number));
-
-    // Security
-    String username = "admin";
-    String password = "password123";
-    authenticateUser(username, password);
-
-    // Performance
-    long startTime = System.currentTimeMillis();
-    performComplexCalculation();
-    long endTime = System.currentTimeMillis();
-    System.out.println("Execution time: " + (endTime - startTime) + " ms");
-
-    // Compatibility
-    List<String> list = new ArrayList<>();
-    list.add("Item 1");
-    list.add("Item 2");
-    printList(list);
-
-    // Error-Prone
-    int[] numbers = {1, 2, 3};
-    for (int i = 0; i <= numbers.length; i++) {
-      System.out.println(numbers[i]);
+    /**
+     * Initializes a complex number from the specified real and imaginary parts.
+     *
+     * @param real the real part
+     * @param imag the imaginary part
+     */
+    public Complex(double real, double imag) {
+        re = real;
+        im = imag;
     }
-  }
 
-  // Code Coverage
-  public static void printMessage(String message) {
-    if (message != null && !message.isEmpty()) {
-      System.out.println(message);
+    /**
+     * Returns a string representation of this complex number.
+     *
+     * @return a string representation of this complex number,
+     *         of the form 34 - 56i.
+     */
+    public String toString() {
+        if (im == 0) return re + "";
+        if (re == 0) return im + "i";
+        if (im <  0) return re + " - " + (-im) + "i";
+        return re + " + " + im + "i";
     }
-  }
 
-  // Complexity
-  public static int factorial(int n) {
-    if (n == 0 || n == 1) {
-      return 1;
+    /**
+     * Returns the absolute value of this complex number.
+     * This quantity is also known as the <em>modulus</em> or <em>magnitude</em>.
+     *
+     * @return the absolute value of this complex number
+     */
+    public double abs() {
+        return Math.hypot(re, im);
     }
-    return n * factorial(n - 1);
-  }
 
-  // Security
-  public static void authenticateUser(String username, String password) {
-    if (username.equals("admin") && password.equals("secret")) {
-      System.out.println("Authentication successful!");
-    } else {
-      System.out.println("Authentication failed!");
+    /**
+     * Returns the phase of this complex number.
+     * This quantity is also known as the <em>angle</em> or <em>argument</em>.
+     *
+     * @return the phase of this complex number, a real number between -pi and pi
+     */
+    public double phase() {
+        return Math.atan2(im, re);
     }
-  }
 
-  // Performance
-  public static void performComplexCalculation() {
-    int result = 0;
-    for (int i = 0; i < 1000000; i++) {
-      result += i;
+    /**
+     * Returns the sum of this complex number and the specified complex number.
+     *
+     * @param  that the other complex number
+     * @return the complex number whose value is {@code (this + that)}
+     */
+    public Complex plus(Complex that) {
+        double real = this.re + that.re;
+        double imag = this.im + that.im;
+        return new Complex(real, imag);
     }
-  }
 
-  // Compatibility
-  public static void printList(List<String> list) {
-    for (String item : list) {
-      System.out.println(item);
+    /**
+     * Returns the result of subtracting the specified complex number from
+     * this complex number.
+     *
+     * @param  that the other complex number
+     * @return the complex number whose value is {@code (this - that)}
+     */
+    public Complex minus(Complex that) {
+        double real = this.re - that.re;
+        double imag = this.im - that.im;
+        return new Complex(real, imag);
     }
-  }
+
+    /**
+     * Returns the product of this complex number and the specified complex number.
+     *
+     * @param  that the other complex number
+     * @return the complex number whose value is {@code (this * that)}
+     */
+    public Complex times(Complex that) {
+        double real = this.re * that.re - this.im * that.im;
+        double imag = this.re * that.im + this.im * that.re;
+        return new Complex(real, imag);
+    }
+
+    /**
+     * Returns the product of this complex number and the specified scalar.
+     *
+     * @param  alpha the scalar
+     * @return the complex number whose value is {@code (alpha * this)}
+     */
+    public Complex scale(double alpha) {
+        return new Complex(alpha * re, alpha * im);
+    }
+
+    /**
+     * Returns the product of this complex number and the specified scalar.
+     *
+     * @param  alpha the scalar
+     * @return the complex number whose value is {@code (alpha * this)}
+     * @deprecated Replaced by {@link #scale(double)}.
+     */
+    @Deprecated
+    public Complex times(double alpha) {
+        return new Complex(alpha * re, alpha * im);
+    }
+
+    /**
+     * Returns the complex conjugate of this complex number.
+     *
+     * @return the complex conjugate of this complex number
+     */
+    public Complex conjugate() {
+        return new Complex(re, -im);
+    }
+
+    /**
+     * Returns the reciprocal of this complex number.
+     *
+     * @return the complex number whose value is {@code (1 / this)}
+     */
+    public Complex reciprocal() {
+        double scale = re*re + im*im;
+        return new Complex(re / scale, -im / scale);
+    }
+
+    /**
+     * Returns the real part of this complex number.
+     *
+     * @return the real part of this complex number
+     */
+    public double re() {
+        return re;
+    }
+
+    /**
+     * Returns the imaginary part of this complex number.
+     *
+     * @return the imaginary part of this complex number
+     */
+    public double im() {
+        return im;
+    }
+
+    /**
+     * Returns the result of dividing the specified complex number into
+     * this complex number.
+     *
+     * @param  that the other complex number
+     * @return the complex number whose value is {@code (this / that)}
+     */
+    public Complex divides(Complex that) {
+        return this.times(that.reciprocal());
+    }
+
+    /**
+     * Returns the complex exponential of this complex number.
+     *
+     * @return the complex exponential of this complex number
+     */
+    public Complex exp() {
+        return new Complex(Math.exp(re) * Math.cos(im), Math.exp(re) * Math.sin(im));
+    }
+
+    /**
+     * Returns the complex sine of this complex number.
+     *
+     * @return the complex sine of this complex number
+     */
+    public Complex sin() {
+        return new Complex(Math.sin(re) * Math.cosh(im), Math.cos(re) * Math.sinh(im));
+    }
+
+    /**
+     * Returns the complex cosine of this complex number.
+     *
+     * @return the complex cosine of this complex number
+     */
+    public Complex cos() {
+        return new Complex(Math.cos(re) * Math.cosh(im), -Math.sin(re) * Math.sinh(im));
+    }
+
+    /**
+     * Returns the complex tangent of this complex number.
+     *
+     * @return the complex tangent of this complex number
+     */
+    public Complex tan() {
+        return sin().divides(cos());
+    }
+
+
+    /**
+     * Unit tests the {@code Complex} data type.
+     *
+     * @param args the command-line arguments
+     */
+    public static void main(String[] args) {
+        Complex a = new Complex(5.0, 6.0);
+        Complex b = new Complex(-3.0, 4.0);
+
+        StdOut.println("a            = " + a);
+        StdOut.println("b            = " + b);
+        StdOut.println("Re(a)        = " + a.re());
+        StdOut.println("Im(a)        = " + a.im());
+        StdOut.println("b + a        = " + b.plus(a));
+        StdOut.println("a - b        = " + a.minus(b));
+        StdOut.println("a * b        = " + a.times(b));
+        StdOut.println("b * a        = " + b.times(a));
+        StdOut.println("a / b        = " + a.divides(b));
+        StdOut.println("(a / b) * b  = " + a.divides(b).times(b));
+        StdOut.println("conj(a)      = " + a.conjugate());
+        StdOut.println("|a|          = " + a.abs());
+        StdOut.println("tan(a)       = " + a.tan());
+    }
+
 }
